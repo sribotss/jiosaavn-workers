@@ -1,0 +1,355 @@
+Deployment Guide for JioSaavnAPI Cloudflare Workers
+🚀 Quick Start
+Prerequisites
+Node.js 16+ installed
+Cloudflare account
+Wrangler CLI installed
+Step 1: Install Wrangler CLI
+bash
+
+Line Wrapping
+
+Collapse
+Copy
+1
+npm install -g wrangler
+Step 2: Login to Cloudflare
+bash
+
+Line Wrapping
+
+Collapse
+Copy
+1
+wrangler login
+Step 3: Clone and Setup
+bash
+
+Line Wrapping
+
+Collapse
+Copy
+1
+2
+3
+git clone https://github.com/yourusername/jiosaavn-api-worker.git
+cd jiosaavn-api-worker
+npm install
+Step 4: Configure Worker
+Create a wrangler.toml file (already included) or configure it:
+
+bash
+
+Line Wrapping
+
+Collapse
+Copy
+1
+wrangler config
+Step 5: Deploy
+bash
+
+Line Wrapping
+
+Collapse
+Copy
+1
+npm run deploy
+Your worker will be deployed at https://jiosaavn-api.your-subdomain.workers.dev
+
+📋 Detailed Deployment Steps
+1. Cloudflare Account Setup
+Sign up for a Cloudflare account
+Verify your email address
+Add your domain to Cloudflare (optional, for custom domains)
+2. Worker Configuration
+Edit wrangler.toml to configure your worker:
+
+toml
+
+Line Wrapping
+
+Collapse
+Copy
+1
+2
+3
+4
+5
+6
+name = "jiosaavn-api"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+[env.production]
+vars = { ENVIRONMENT = "production" }
+3. Environment Variables
+Set environment variables in Cloudflare dashboard or via wrangler:
+
+bash
+
+Line Wrapping
+
+Collapse
+Copy
+1
+2
+wrangler secret put API_VERSION
+# Enter value: 1.0.0
+4. Custom Domain Setup (Optional)
+To use a custom domain:
+
+Add your domain to Cloudflare
+Update wrangler.toml:
+toml
+
+Line Wrapping
+
+Collapse
+Copy
+1
+2
+3
+4
+[env.production]
+routes = [
+  { pattern = "api.yourdomain.com/*", zone_name = "yourdomain.com" }
+]
+Deploy:
+bash
+
+Line Wrapping
+
+Collapse
+Copy
+1
+npm run deploy:production
+5. Local Development
+Test locally before deployment:
+
+bash
+
+Line Wrapping
+
+Collapse
+Copy
+1
+npm run dev
+Access your API at http://localhost:8787
+
+🔧 Advanced Configuration
+KV Storage for Caching
+Enable KV storage to cache responses:
+
+Create KV namespace:
+bash
+
+Line Wrapping
+
+Collapse
+Copy
+1
+wrangler kv:namespace create JIO_SAAVN_CACHE
+Update wrangler.toml:
+toml
+
+Line Wrapping
+
+Collapse
+Copy
+1
+2
+3
+[[kv_namespaces]]
+binding = "JIO_SAAVN_CACHE"
+id = "your-namespace-id"
+Rate Limiting
+Implement rate limiting using Cloudflare's built-in features:
+
+Go to Cloudflare Dashboard → Security → WAF → Rate Limiting Rules
+Create a new rate limiting rule for your worker
+Monitoring
+Set up monitoring:
+
+Cloudflare Dashboard → Workers & Pages → Your Worker
+View metrics, logs, and analytics
+Set up alerts for errors or high usage
+🌍 Environment Management
+Development
+bash
+
+Line Wrapping
+
+Collapse
+Copy
+1
+npm run dev
+Staging
+bash
+
+Line Wrapping
+
+Collapse
+Copy
+1
+npm run deploy:staging
+Production
+bash
+
+Line Wrapping
+
+Collapse
+Copy
+1
+npm run deploy:production
+📊 API Usage Examples
+After deployment, test your API:
+
+bash
+
+Line Wrapping
+
+Collapse
+Copy
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+# Search for songs
+curl "https://your-worker.workers.dev/result/?query=alone&lyrics=true"
+
+# Get song by URL
+curl "https://your-worker.workers.dev/song/?query=https://www.jiosaavn.com/song/khairiyat/PwAFSRNpAWw"
+
+# Get album
+curl "https://your-worker.workers.dev/album/?query=https://www.jiosaavn.com/album/chhichhore/V4F3M5,cNb4_"
+
+# Get playlist
+curl "https://your-worker.workers.dev/playlist/?query=https://www.jiosaavn.com/featured/romantic-hits-2020---hindi/ABiMGqjovSFuOxiEGmm6lQ__"
+
+# Get lyrics
+curl "https://your-worker.workers.dev/lyrics/?query=https://www.jiosaavn.com/song/khairiyat/PwAFSRNpAWw"
+🚨 Troubleshooting
+Common Issues
+1. CORS Errors
+Problem: Browser blocks API requests
+Solution: The API includes CORS headers. Ensure your client-side code is configured correctly.
+
+2. Deployment Failures
+Problem: wrangler deploy fails
+Solution:
+
+bash
+
+Line Wrapping
+
+Collapse
+Copy
+1
+2
+wrangler whoami  # Check authentication
+wrangler config # Reconfigure if needed
+3. 404 Errors
+Problem: API endpoints return 404
+Solution: Check URL paths and ensure worker is deployed correctly.
+
+4. Decryption Failures
+Problem: Media URLs fail to decrypt
+Solution: JioSaavn may have changed their encryption. Check console logs for errors.
+
+Debugging Commands
+bash
+
+Line Wrapping
+
+Collapse
+Copy
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+# Check worker status
+wrangler deployments list
+
+# View logs
+wrangler tail
+
+# Test locally
+npm run dev
+
+# Check configuration
+wrangler config list
+Performance Optimization
+Enable Caching: Use KV storage to cache frequent requests
+Compress Responses: Enable compression in Cloudflare settings
+Use CDN: Leverage Cloudflare's global CDN
+Monitor Usage: Keep track of request counts and response times
+🔒 Security Considerations
+Rate Limiting: Implement rate limiting to prevent abuse
+Input Validation: Validate all input parameters
+Error Handling: Don't expose sensitive information in error messages
+HTTPS: Always use HTTPS (automatically provided by Cloudflare)
+💰 Cost Management
+Cloudflare Workers Free Tier
+100,000 requests/day
+10ms CPU time per request
+1GB KV storage
+1GB data transfer
+Monitoring Costs
+bash
+
+Line Wrapping
+
+Collapse
+Copy
+1
+2
+3
+4
+5
+# Check usage
+wrangler deployments list
+
+# Monitor analytics
+# Visit Cloudflare Dashboard → Workers → Your Worker
+Optimization Tips
+Cache frequently accessed data
+Minimize CPU usage per request
+Use efficient data structures
+Implement proper error handling
+📚 Additional Resources
+Cloudflare Workers Documentation
+Wrangler CLI Documentation
+Cloudflare Pricing
+JioSaavnAPI Original Repository
+🤝 Contributing
+Fork the repository
+Create a feature branch
+Make your changes
+Test locally with npm run dev
+Submit a pull request
+📞 Support
+If you encounter issues:
+
+Check the troubleshooting section
+Review Cloudflare Workers documentation
+Open an issue on GitHub
+Check the original JioSaavnAPI repository for related issues
+Note: This is an unofficial API. Use responsibly and respect JioSaavn's terms of service.

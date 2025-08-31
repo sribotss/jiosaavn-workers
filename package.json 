@@ -1,0 +1,39 @@
+{
+  "name": "jiosaavn-api-worker",
+  "version": "1.0.0",
+  "description": "Unofficial JioSaavn API for Cloudflare Workers",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:staging": "wrangler deploy --env staging",
+    "deploy:production": "wrangler deploy --env production",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "jiosaavn",
+    "api",
+    "music",
+    "cloudflare-workers",
+    "unofficial"
+  ],
+  "author": "Adapted from cyberboysumanjay/JioSaavnAPI",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  },
+  "dependencies": {
+    "@cloudflare/kv-asset-handler": "^0.3.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/jiosaavn-api-worker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/jiosaavn-api-worker/issues"
+  },
+  "homepage": "https://github.com/yourusername/jiosaavn-api-worker#readme"
+}
