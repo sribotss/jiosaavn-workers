@@ -1,0 +1,38 @@
+{
+  "name": "jiosaavn-api",
+  "main": "src/index.js",
+  "compatibility_date": "2025-08-31",
+  "limits": {
+    "cpu_ms": 30000
+  },
+  "vars": {
+    "API_VERSION": "1.0.0",
+    "API_NAME": "JioSaavnAPI"
+  },
+  "env": {
+    "development": {
+      "vars": {
+        "ENVIRONMENT": "development"
+      }
+    },
+    "production": {
+      "vars": {
+        "ENVIRONMENT": "production"
+      }
+    }
+  },
+  "kv_namespaces": [
+    {
+      "binding": "JIO_SAAVN_CACHE",
+      "id": "your-kv-namespace-id"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "RATE_LIMITER",
+        "class_name": "RateLimiter"
+      }
+    ]
+  }
+}
